@@ -3,10 +3,13 @@ Please note that CouchDB no longer autocreates system tables for you, so you wil
 To secure your couchdb set the following options in the "Configuration" Interface (<YOURDOMAIN>/_utils/#_config/)
   
 chttpd
+
 require_valid_user = true
 
 couch_httpd_auth
+
 require_valid_user = true
 
 httpd
+
 www-authenticate = Basic realm="administrator"
