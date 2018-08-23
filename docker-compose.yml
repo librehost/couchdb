@@ -16,6 +16,7 @@ services:
       - couchdbconf:/opt/couchdb/etc
       - couchdbdata:/opt/couchdb/data
     networks:
+      reverseproxy:
       database:
         aliases:
          - ${COMPOSE_PROJECT_NAME:?err}
@@ -56,8 +57,9 @@ volumes:
   couchdbdata:
 
 networks:
+  reverseproxy:
+    external: true
+    name: reverseproxy
   database:
-      external: true
-      name: database # named networks will not get removed on container update/removal
-      
-  
+    external: true
+    name: database # named networks will not get removed on container update/removal
