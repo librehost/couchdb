@@ -11,7 +11,7 @@ require_valid_user = true
 require_valid_user = true
 
 
-Now all endpoints are secure. Because of the following bug you cant login to Fauxton anymore without executing the following in your browsers console first:
+Now all endpoints are secure. Because of this bug: https://issues.apache.org/jira/browse/COUCHDB-1452 you cant login to fauxton anymore without executing the following in your browsers console first to get the login-cookie:
 
 ```javascript
 fetch('/_session', {
