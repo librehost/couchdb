@@ -10,6 +10,17 @@ require_valid_user = true
 
 require_valid_user = true
 
-### httpd
 
-www-authenticate = Basic realm="administrator"
+Now all endpoints are secure. Execute the following JS in Browsers Developer-Tools to login to Fauxton:
+
+fetch('<YOURDOMAIN>/_session', {
+    method: "POST",
+    credentials: 'include',
+    cache: "no-cache",
+    headers: {"Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Basic " + btoa("USERNAME:PASSWORD")
+    },
+    body: JSON.stringify({name: 'USERNAME', password: 'PASSWORD'}), // body data type must match "Content-Type" header
+})
+.then(response => response.json());
