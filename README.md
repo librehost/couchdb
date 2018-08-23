@@ -11,7 +11,7 @@ require_valid_user = true
 require_valid_user = true
 
 
-Now all endpoints are secure. Execute the following JS in Browsers Developer-Tools to login to Fauxton:
+Now all endpoints are secure. Because of the following bug you cant login to Fauxton anymore without executing the following in your browsers console first:
 
 ```javascript
 fetch('/_session', {
