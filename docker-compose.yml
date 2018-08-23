@@ -45,11 +45,11 @@ services:
       - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.frontend.rule=Host:${SHIPY_STACK_DOMAINS:?err}"
       - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.frontend.headers.customResponseHeaders=X-Forwarded-Proto:https"
     #command: --logLevel=DEBUG
-    #healthcheck:
-     # test: ["CMD", "curl", "-f", "http://localhost:5984"]
-      #interval: 10s
-      #timeout: 30s
-      #retries: 3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5984/_up"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
       #start_period: 5s
 
 volumes:
