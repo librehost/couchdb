@@ -1,0 +1,63 @@
+version: '2.4' # Cant use 3+ because it does not support resource-limits without swarm-mode: https://github.com/docker/compose/issues/4513
+
+services:
+
+  couchdb:
+    mem_limit: ${SHIPY_STACK_SERVICE_1_MEMORY_LIMIT:-1000000000}
+    build:
+      context: ./
+      dockerfile: Dockerfile.couchdb
+      args:
+        VERSION: ${SHIPY_STACK_SERVICE_1_VERSION:-latest}
+    expose:
+      - "5984"
+    restart: always
+    volumes:
+      - couchdbconf:/opt/couchdb/etc
+      - couchdbdata:/opt/couchdb/data
+    networks:
+      database:
+        aliases:
+         - ${COMPOSE_PROJECT_NAME:?err}
+         - ${COMPOSE_PROJECT_NAME:?err}_couchdb
+    env_file:
+      - .env
+    # environment overrides env_files vars
+    labels:
+      # shipy labels must be present on all services
+      # shipy.stack.id must be equal the name of the repository
+      - "shipy.stack.id=${COMPOSE_PROJECT_NAME:?err}"
+      - "shipy.stack.name=${COMPOSE_PROJECT_NAME:?err}"
+      - "shipy.stack.domains=${SHIPY_STACK_DOMAINS:?err}"
+      - "shipy.stack.json=${SHIPY_STACK_JSON:?err}"
+      - "shipy.stack.service.number=1"
+      - "shipy.stack.service.name=${COMPOSE_PROJECT_NAME:?err}_couchdb"
+      - "shipy.stack.service.version=${SHIPY_STACK_SERVICE_1_VERSION:-latest}"
+      # https://docs.traefik.io/configuration/backends/docker/
+      - "traefik.enable=true"
+      - "traefik.backend=${COMPOSE_PROJECT_NAME:?err}_couchdb"
+      - "traefik.backend.loadbalancer.stickiness=true"
+      - "traefik.docker.network=reverseproxy"
+      #- "traefik.frontend.passHostHeader=true"
+      - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.port=5984"
+      - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.frontend.passHostHeader=true"
+      - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.frontend.rule=Host:${SHIPY_STACK_DOMAINS:?err}"
+      - "traefik.${COMPOSE_PROJECT_NAME:?err}_couchdb.frontend.headers.customResponseHeaders=X-Forwarded-Proto:https"
+    #command: --logLevel=DEBUG
+    #healthcheck:
+     # test: "/usr/bin/mysql --user=root --password=${MYSQL_ROOT_PASSWORD:?err} --execute \"SHOW DATABASES;\""
+     # interval: 10s
+     # timeout: 10s
+     # retries: 3
+     # start_period: 5s
+
+volumes:
+  couchdbconf:
+  couchdbdata:
+
+networks:
+  database:
+      external: true
+      name: database # named networks will not get removed on container update/removal
+      
+  

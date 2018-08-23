@@ -1,0 +1,5 @@
+# Keep common instructions at the top of the Dockerfile to utilize the cache.
+# The ARG instruction lets Dockerfile authors define values that users can set at build-time using the --build-arg flag. This flag allows you to pass the build-time variables that are accessed like regular environment variables in the RUN instruction of the Dockerfile. Also, these values don’t persist in the intermediate or final images like ENV values do.
+ARG VERSION=latest
+FROM couchdb:$VERSION
+#COPY local.ini /opt/couchdb/etc/
