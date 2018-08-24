@@ -9,3 +9,14 @@ To secure all new created databases set the following option in the "Configurati
 ### couchdb
 
 default_security = admin_only
+
+
+Also the following settings are recommended:
+
+### chttpd
+
+bind_address = 0.0.0.0
+
+### httpd
+
+bind_address = 0.0.0.0
